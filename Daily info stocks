@@ -1,0 +1,169 @@
+# Id and password set up
+email = '***@gmail.com'
+password = '***'
+# Import the stocks from the lista.txt file
+lista = open('lista.txt', 'r')
+linhas = lista.readlines()
+#Create the list
+variavel_1_list = []
+variavel_2_list = []
+empresa_nome_list = []
+empresa_cnpj_list = []
+empresa_patliq_list = []
+empresa_dividbruta_list = []
+empresa_vlmercado_list = []
+empresa_ativos_list = []
+empresa_ativcirc_list = []
+empresa_disponibilidade_list = []
+empresa_dividliquida_list = []
+empresa_vlfirma_list = []
+empresa_numpapeis_list = []
+empresa_freefloat_list = []
+empresa_segmentolistagem_list = []
+empresa_segmentoatuacao_list = []
+empresa_setor_list = []
+empresa_subsetor_list = []
+#---------------------------//---------------------------
+!pip install webdriver-manager
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
+import time
+from datetime import datetime
+import re
+import pandas as pd
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+navegador = webdriver.Chrome(ChromeDriverManager().install())
+#---------------------------//---------------------------
+#Open chrome
+navegador = webdriver.Chrome(ChromeDriverManager().install())
+navegador.get("https://statusinvest.com.br/")
+#login
+time.sleep(2)
+navegador.find_element_by_xpath('//*[@id="main-nav-nav"]/div/div/div/ul/li[10]/div[2]/button/span[2]').click()
+#email and pass
+navegador.find_element_by_xpath('//*[@id="Email"]').send_keys(email)
+navegador.find_element_by_xpath('//*[@id="Password"]').send_keys(password)
+navegador.find_element_by_xpath('//*[@id="btn-login"]').click()
+time.sleep(2)
+
+for linha in linhas:
+       
+    #Go to stck page
+    navegador.get("https://statusinvest.com.br/acoes/" + linha)
+ 
+    time.sleep(2)
+    #Carregar comparar media mercado (sector)
+    try:
+        navegador.find_element_by_xpath('//*[@id="indicators-section"]/div[1]/div[2]/button[3]/div/span').click()
+        time.sleep(2)
+        variavel_1 = navegador.find_element_by_xpath('//*[@id="indicators-section"]/div[4]/div[2]/div[1]/div/div[1]/div/div[2]/div/strong').text
+        variavel_2 = navegador.find_element_by_xpath('//*[@id="indicators-section"]/div[4]/div[2]/div[1]/div/div[1]/div/div[3]/div/div/div[2]/strong').text
+        variavel_2 = variavel_2[1:]
+        # Nome da empresa
+        empresa_nome = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[1]/div[2]/h4/span').text
+        # CNPJ da empresa
+        empresa_cnpj = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[1]/div[2]/h4/small').text
+        # Patrimônio líquido
+        empresa_patliq =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[1]/div/div/strong').text
+        # Dívida bruta
+        empresa_dividbruta =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[4]/div/div/strong').text
+        # Valor de mercado
+        empresa_vlmercado =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[7]/div/div/strong').text
+        # Ativos
+        empresa_ativos =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[2]/div/div/strong').text
+        # Ativo circulante
+        empresa_ativcirc = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[3]/div/div/div/strong').text
+        # Disponibilidade
+        empresa_disponibilidade =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[5]/div/div/strong').text
+        # Dívida líquida
+        empresa_dividliquida =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[6]/div/div/strong').text
+        # Valor de Firma
+        empresa_vlfirma = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[8]/div/div/strong').text
+        # Número de papéis
+        empresa_numpapeis =  navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[9]/div/div/strong').text
+        # Free Float
+        empresa_freefloat = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[11]/div/div/strong').text
+        # Segmento Listagem
+        empresa_segmentolistagem = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[2]/div[10]/div/div/strong').text
+        # Segmento de atuação
+        empresa_segmentoatuacao = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[3]/div/div[3]/div/div/div/a/strong').text
+        # Setor de atuação
+        empresa_setor = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[3]/div/div[1]/div/div/div/a/strong').text
+        # Subsetor de atuação
+        empresa_subsetor = navegador.find_element_by_xpath('//*[@id="company-section"]/div[1]/div/div[3]/div/div[2]/div/div/div/a/strong').text
+        ###################################
+        
+        #Append variable to the lists
+        variavel_1_list.append(variavel_1)
+        variavel_2_list.append(variavel_2)
+        empresa_nome_list.append(empresa_nome)
+        empresa_cnpj_list.append(empresa_cnpj)
+        empresa_patliq_list.append(empresa_patliq)
+        empresa_dividbruta_list.append(empresa_dividbruta)
+        empresa_vlmercado_list.append(empresa_vlmercado)
+        empresa_ativos_list.append(empresa_ativos)
+        empresa_ativcirc_list.append(empresa_ativcirc)
+        empresa_disponibilidade_list.append(empresa_disponibilidade)
+        empresa_dividliquida_list.append(empresa_dividliquida)
+        empresa_vlfirma_list.append(empresa_vlfirma)
+        empresa_numpapeis_list.append(empresa_numpapeis)
+        empresa_freefloat_list.append(empresa_freefloat_list)
+        empresa_segmentolistagem_list.append(empresa_segmentolistagem)
+        empresa_segmentoatuacao_list.append(empresa_segmentoatuacao)
+        empresa_setor_list.append(empresa_setor)
+        empresa_subsetor_list.append(empresa_subsetor)
+
+        print (variavel_1)
+        print (variavel_2)
+        print(empresa_nome)
+        print(empresa_setor)
+        print (empresa_subsetor)
+    except NoSuchElementException:
+            pass
+
+navegador.quit()
+#---------------------------//---------------------------
+lista_zip = list(zip(linhas,
+variavel_1_list,
+variavel_2_list,
+empresa_nome_list,
+empresa_cnpj_list,
+empresa_patliq_list,
+empresa_dividbruta_list,
+empresa_vlmercado_list,
+empresa_ativos_list,
+empresa_ativcirc_list,
+empresa_disponibilidade_list,
+empresa_dividliquida_list,
+empresa_vlfirma_list,
+empresa_numpapeis_list,
+empresa_freefloat_list,
+empresa_segmentolistagem_list,
+empresa_segmentoatuacao_list,
+empresa_setor_list,
+empresa_subsetor_list))
+
+#Create Table
+tabela = pd.DataFrame((lista_zip), columns=['nome código',
+'media sector',
+'acao','empresa_nome',
+'empresa_cnpj',
+'empresa_patliq',
+'empresa_dividbruta',
+'empresa_vlmercado',
+'empresa_ativos',
+'empresa_ativcirc',
+'empresa_disponibilidade',
+'empresa_dividliquida',
+'empresa_vlfirma',
+'empresa_numpapeis',
+'empresa_freefloat',
+'empresa_segmentolistagem',
+'empresa_segmentoatuacao',
+'empresa_setor',
+'empresa_subsetor'])
+#---------------------------//---------------------------
+#To excel
+tabela.to_excel(r'C:\Users\joaoc\Desktop\Intensivo Python\Bernardo Fiverr\tabela_output.xlsx', index = False)
